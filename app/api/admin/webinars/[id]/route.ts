@@ -3,6 +3,9 @@ import { auth } from '@/lib/auth';
 import { connectDB } from '@/lib/mongodb';
 import PublicWebinar from '@/models/PublicWebinar';
 
+const MEETING_URL_RE =
+  /^https:\/\/(meet\.google\.com\/|([a-z0-9-]+\.)?zoom\.us\/(j|wc)\/|teams\.microsoft\.com\/l\/meetup-join\/|teams\.live\.com\/meet\/)/i;
+
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -14,6 +17,13 @@ export async function PATCH(
 
   const { id } = await params;
   const body = await req.json();
+
+  if (body.meetingUrl !== undefined && !MEETING_URL_RE.test(body.meetingUrl)) {
+    return NextResponse.json(
+      { success: false, error: 'Only Google Meet, Zoom, or Microsoft Teams links are allowed' },
+      { status: 400 }
+    );
+  }
 
   await connectDB();
   const webinar = await PublicWebinar.findByIdAndUpdate(

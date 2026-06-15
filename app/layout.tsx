@@ -97,13 +97,11 @@ export const metadata: Metadata = {
     siteName: 'Howlfox Academy',
     title: 'Howlfox Academy — Kerala\'s Best Skill Learning Platform',
     description: 'Expert-led courses in Digital Marketing, UI/UX, Graphic Design, Photography, and more. A HowlFox initiative. Join live classes and learn from industry experts.',
-    images: [{ url: '/og-image.png', width: 216, height: 216, alt: 'Howlfox Academy — Kerala\'s Best Skill Learning Platform' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Howlfox Academy — Kerala\'s Best Skill Learning Platform',
     description: 'Expert-led courses in Digital Marketing, UI/UX, Graphic Design, Photography, and more. A HowlFox initiative.',
-    images: ['/og-image.png'],
   },
   icons: {
     icon: [

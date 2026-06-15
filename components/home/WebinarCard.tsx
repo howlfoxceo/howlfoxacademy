@@ -17,9 +17,17 @@ interface Webinar {
   topic: string;
 }
 
+function getPlatform(url: string): { label: string; color: string } | null {
+  if (url.includes('meet.google.com')) return { label: 'Google Meet', color: 'text-blue-400 bg-blue-400/10 border-blue-500/20' };
+  if (url.includes('zoom.us')) return { label: 'Zoom', color: 'text-sky-400 bg-sky-400/10 border-sky-500/20' };
+  if (url.includes('teams.microsoft.com') || url.includes('teams.live.com')) return { label: 'Teams', color: 'text-violet-400 bg-violet-400/10 border-violet-500/20' };
+  return null;
+}
+
 export default function WebinarCard({ w }: { w: Webinar }) {
   const [showDetail, setShowDetail] = useState(false);
   const d = new Date(w.date);
+  const platform = getPlatform(w.meetingUrl);
 
   return (
     <>
@@ -57,11 +65,18 @@ export default function WebinarCard({ w }: { w: Webinar }) {
           </p>
         </div>
 
-        {w.topic && (
-          <span className="hidden sm:block flex-shrink-0 text-[10px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-400/10 border border-emerald-500/20 px-3 py-1.5 rounded-full">
-            {w.topic}
-          </span>
-        )}
+        <div className="hidden sm:flex flex-col items-end gap-1.5 flex-shrink-0">
+          {w.topic && (
+            <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-400/10 border border-emerald-500/20 px-3 py-1.5 rounded-full">
+              {w.topic}
+            </span>
+          )}
+          {platform && (
+            <span className={`text-[10px] font-bold border px-2.5 py-1 rounded-full ${platform.color}`}>
+              {platform.label}
+            </span>
+          )}
+        </div>
 
         <button
           onClick={(e) => { e.stopPropagation(); window.open(w.meetingUrl, '_blank', 'noopener,noreferrer'); }}
@@ -170,6 +185,7 @@ export default function WebinarCard({ w }: { w: Webinar }) {
                   >
                     <ExternalLink size={16} />
                     Join Free — No Login Required
+                    {platform && <span className="ml-1 opacity-80">· {platform.label}</span>}
                   </a>
                   <p className="text-center text-[11px] text-slate-600">Free & open to everyone · No registration needed</p>
                 </div>

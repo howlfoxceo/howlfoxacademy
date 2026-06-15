@@ -4,12 +4,18 @@ import { connectDB } from '@/lib/mongodb';
 import PublicWebinar from '@/models/PublicWebinar';
 import { z } from 'zod';
 
+const MEETING_URL_RE =
+  /^https:\/\/(meet\.google\.com\/|([a-z0-9-]+\.)?zoom\.us\/(j|wc)\/|teams\.microsoft\.com\/l\/meetup-join\/|teams\.live\.com\/meet\/)/i;
+
 const webinarSchema = z.object({
   title: z.string().min(1),
   description: z.string().min(1),
   date: z.string(),
   duration: z.number().int().positive(),
-  meetingUrl: z.string().url(),
+  meetingUrl: z
+    .string()
+    .url()
+    .regex(MEETING_URL_RE, 'Only Google Meet, Zoom, or Microsoft Teams links are allowed'),
   thumbnail: z.string().optional(),
   instructor: z.string().min(1),
   topic: z.string().min(1),

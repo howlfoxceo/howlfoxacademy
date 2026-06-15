@@ -230,7 +230,6 @@ export default function AdminWebinarsPage() {
                 { l:'Title *', k:'title', type:'text', ph:'Webinar title' },
                 { l:'Instructor *', k:'instructor', type:'text', ph:'Instructor name' },
                 { l:'Topic *', k:'topic', type:'text', ph:'e.g. Web Development' },
-                { l:'Meeting URL *', k:'meetingUrl', type:'url', ph:'https://meet.google.com/...' },
               ].map(f => (
                 <div key={f.k}>
                   <label className="block text-sm font-semibold text-slate-700 mb-1.5">{f.l}</label>
@@ -240,6 +239,31 @@ export default function AdminWebinarsPage() {
                     placeholder={f.ph} />
                 </div>
               ))}
+
+              {/* Meeting URL with platform detection */}
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+                  Meeting URL *
+                  {(() => {
+                    const url = form.meetingUrl;
+                    if (url.includes('meet.google.com')) return <span className="ml-2 text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">Google Meet</span>;
+                    if (url.includes('zoom.us')) return <span className="ml-2 text-xs font-bold text-sky-600 bg-sky-50 px-2 py-0.5 rounded-full">Zoom</span>;
+                    if (url.includes('teams.microsoft.com') || url.includes('teams.live.com')) return <span className="ml-2 text-xs font-bold text-violet-600 bg-violet-50 px-2 py-0.5 rounded-full">Teams</span>;
+                    return null;
+                  })()}
+                </label>
+                <input
+                  type="url"
+                  value={form.meetingUrl}
+                  onChange={e => set('meetingUrl', e.target.value)}
+                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-400 text-sm"
+                  placeholder="https://meet.google.com/  ·  zoom.us/j/  ·  teams.microsoft.com/..."
+                />
+                <p className="mt-1.5 text-xs text-slate-400">
+                  Only <span className="font-semibold text-slate-500">Google Meet</span>, <span className="font-semibold text-slate-500">Zoom</span>, or <span className="font-semibold text-slate-500">Microsoft Teams</span> links accepted.
+                  Make sure your meeting is set to <span className="font-semibold text-amber-600">allow anyone with the link</span> — no sign-in required.
+                </p>
+              </div>
 
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">Description *</label>
